@@ -75,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.button_retrofit:
                 startActivity(new Intent(this, RetrofitActivity.class));
                 break;
+
         }
     }
 
