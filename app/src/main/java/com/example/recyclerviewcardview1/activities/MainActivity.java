@@ -63,8 +63,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         recyclerView.setAdapter(myAdapter);
 
         buttonGrid = findViewById(R.id.button);
+
         buttonRetrofit = findViewById(R.id.button_retrofit);
         buttonGrid.setOnClickListener(this);
+
         buttonRetrofit.setOnClickListener(this);
 
         editTextSearch.addTextChangedListener(new TextWatcher() {
