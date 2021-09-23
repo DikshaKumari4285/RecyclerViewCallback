@@ -1,6 +1,8 @@
 package com.example.recyclerviewcardview1.model;
 
-public class Model {
+import java.io.Serializable;
+
+public class Model implements Serializable {
 
     String title;
     String description;

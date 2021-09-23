@@ -6,12 +6,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Filter;
 
+import com.example.recyclerviewcardview1.CallbackListener;
 import com.example.recyclerviewcardview1.model.Model;
 import com.example.recyclerviewcardview1.MyAdapter;
 import com.example.recyclerviewcardview1.R;
@@ -26,19 +31,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
     MyAdapter myAdapter;
-    Button buttonGrid,buttonRetrofit;
+    Button buttonGrid, buttonRetrofit;
+    EditText editTextSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         init();
+
+        myAdapter.callBack(new CallbackListener() {
+            @Override
+            public void callBack(Model model) {
+                Intent intent = new Intent(MainActivity.this,DetailFlagActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("modelID",model);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
     }
 
     public void init() {
         generateData();
 
         recyclerView = findViewById(R.id.rv);
+        editTextSearch = findViewById(R.id.edit_search);
         myAdapter = new MyAdapter(this, mList);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -49,20 +67,50 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         buttonGrid.setOnClickListener(this);
         buttonRetrofit.setOnClickListener(this);
 
+        editTextSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if(editable.length()>2) {
+                    filter(editable.toString());
+                }
+            }
+        });
+
+    }
+
+    private void filter(String text) {
+        ArrayList<Model> filteredList = new ArrayList<>();
+        for (Model item : mList) {
+            if (item.getDescription().toLowerCase().contains(text.toLowerCase())) {
+                filteredList.add(item);
+            }
+        }
+        myAdapter.filterList(filteredList);
     }
 
     public void generateData() {
-        mList.add(new Model("Title1", "Hello world    I am fine", R.drawable.flag4));
-        mList.add(new Model("Title2", "Hello world    I am fine", R.drawable.flag));
-        mList.add(new Model("Title3", "Hello world    I am fine", R.drawable.flag4));
-        mList.add(new Model("Title4", "Hello world    I am fine", R.drawable.flag));
-        mList.add(new Model("Title5", "Hello world    I am fine", R.drawable.flag4));
-        mList.add(new Model("Title6", "Hello world    I am fine", R.drawable.flag3));
-        mList.add(new Model("Title7", "Hello world    I am fine", R.drawable.flag2));
-        mList.add(new Model("Title8", "Hello world    I am fine", R.drawable.flag3));
+        mList.add(new Model("Title1", "first ", R.drawable.flag4));
+        mList.add(new Model("Title2", "second   I am fine", R.drawable.flag));
+        mList.add(new Model("Title3", "third flag   I am fine", R.drawable.flag4));
+        mList.add(new Model("Title4", "fourth flag  I am fine", R.drawable.flag));
+        mList.add(new Model("Title5", "Hello fifth    I am fine", R.drawable.flag4));
+        mList.add(new Model("Title6", "Hello sixth    I am fine", R.drawable.flag3));
+        mList.add(new Model("Title7", "seventh world    I am fine", R.drawable.flag2));
+        mList.add(new Model("Title8", "Hello wgdfgdforld    I am fine", R.drawable.flag3));
         mList.add(new Model("Title9", "Hello world    I am fine", R.drawable.flag2));
-        mList.add(new Model("Title10", "Hello world   I am fine", R.drawable.flag));
-        mList.add(new Model("Title11", "Hello world    I am fine", R.drawable.flag));
+        mList.add(new Model("Title10", "Hello ghdfgdfworld   I am fine", R.drawable.flag));
+        mList.add(new Model("Title11", "Hello wgdfgdfgorld    I am fine", R.drawable.flag));
     }
 
     @Override
@@ -77,35 +125,4 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//
-//        getMenuInflater().inflate(R.menu.my_menu_search,menu);
-//        MenuItem menuItem = findViewById(R.id.search_menu);
-////        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-//        SearchView searchView = (SearchView)menuItem.getActionView();
-////        SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
-//        if (searchView != null){
-//            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//
-//                myAdapter.getFilter().filter(newText);
-//                return true;
-//            }
-//        });
-//        }
-//        else {
-//            Log.d(TAG, "SearchView is null");
-//        }
-//
-//        return super.onCreateOptionsMenu(menu);
-//    }
-
 }
